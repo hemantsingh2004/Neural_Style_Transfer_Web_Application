@@ -1,1 +1,1 @@
-Neural Style Transfer Web Application
+NST Web Application
