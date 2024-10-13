@@ -1,0 +1,76 @@
+.slider {
+    width: 100%;
+    height: 0.8rem;
+    background: transparent;
+    outline: none;
+}
+
+.slider::-webkit-slider-runnable-track {
+    height: 0.8rem;
+    background: linear-gradient(to right, var(--secondary-btn-color) 0%, var(--secondary-btn-color) var(--value), var(--primary-btn-color) var(--value), var(--primary-btn-color) 100%);
+    border-radius: 0.5rem;
+}
+
+.slider::-moz-range-track {
+    height: 0.8rem;
+    background: linear-gradient(to right, var(--secondary-btn-color) 0%, var(--secondary-btn-color) var(--value), var(--primary-btn-color) var(--value), var(--primary-btn-color) 100%);
+    border-radius: 0.5rem;
+}
+
+.slider::-ms-track {
+    height: 0.8rem;
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+}
+
+.slider::-ms-fill-lower {
+    background: var(--secondary-btn-color);
+    border-radius: 0.5rem;
+}
+
+.slider::-ms-fill-upper {
+    background: var(--primary-btn-color);
+    border-radius: 0.5rem;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    background: var(--secondary-btn-color);
+    border: 0.2rem solid var(--secondary-btn-color);
+    cursor: pointer;
+    margin-top: -0.4rem;
+}
+
+.slider::-moz-range-thumb {
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    background: var(--secondary-btn-color);
+    border: 0.2rem solid var(--secondary-btn-color);
+    cursor: pointer;
+}
+
+.slider::-ms-thumb {
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    background: var(--secondary-btn-color);
+    border: 0.2rem solid var(--secondary-btn-color);
+    cursor: pointer;
+}
+
+.slider:hover::-webkit-slider-thumb {
+    background: var(--secondary-btn-hover-color);
+}
+
+.slider:hover::-moz-range-thumb {
+    background: var(--secondary-btn-hover-color);
+}
+
+.slider:hover::-ms-thumb {
+    background: var(--secondary-btn-hover-color);
+}

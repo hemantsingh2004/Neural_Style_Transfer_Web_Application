@@ -1,0 +1,55 @@
+*{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 10px;
+    box-sizing: border-box;
+}
+
+:root{
+    --primary-bg-color: #f7f7f7;
+    --secondary-bg-color: #ede6d6;
+    --primary-color: #333333;
+    --secondary-color: #a52a2a;
+    --tertiary-color: #f5f5dc;
+    --primary-btn-color: #ff6f61;
+    --primary-btn-hover-color: #be2b1e;
+    --secondary-btn-color: #008080;
+    --secondary-btn-hover-color: #005656;
+    --border-color: #333333;
+    --primary-elements-color: #e6e6fa;
+    --secondary-elements-color: #fffacd;
+    --navbar-height: 6rem;
+    --footer-height: 8rem;
+}
+
+.button{
+    background-color: var(--primary-btn-color);
+    color: var(--primary-color);
+    padding: 0.6rem 1.2rem;
+    border-radius: 0.6rem;
+    border: 0.08rem solid var(--border-color);
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.button:hover{
+    background-color: var(--primary-btn-hover-color);
+    color: var(--tertiary-color);
+}
+
+.main-button{
+    width: 18rem;
+    background-color: var(--secondary-btn-color);
+    color: var(--primary-color);
+    padding: 0.8rem 1.4rem;
+    border-radius: 0.8rem;
+    border: 0.08rem solid var(--border-color);
+    font-size: 1.4rem;
+    cursor: pointer;
+}
+
+.main-button:hover{
+    background-color: var(--secondary-btn-hover-color);
+    color: var(--tertiary-color);
+}

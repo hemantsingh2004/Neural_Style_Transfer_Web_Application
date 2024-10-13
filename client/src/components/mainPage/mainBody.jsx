@@ -1,6 +1,7 @@
 import React from "react";
 import Processing from "./processing/processing";
 import Information from "./information/information";
+import '../../styles/mainPage/mainBody.css';
 
 function MainBody(){
     return(
