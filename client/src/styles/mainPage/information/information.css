@@ -1,0 +1,42 @@
+.information{
+    margin: 1rem 10rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 5rem;
+    flex-wrap: wrap;
+    padding: 1rem 1rem;
+}
+
+.information *{
+    color: var(--primary-color);
+    text-align: center;
+}
+
+.info-div{
+    max-width: 30rem;
+    height: 20rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.info-logo{
+    width: 12%;
+    height: 20%;
+}
+
+.info-div img{
+    width: 100%;
+    height: 100%;
+}
+
+.info-heading{
+    font-size: 2rem;
+}
+
+.info-para{
+    font-size: 1.6rem;
+}

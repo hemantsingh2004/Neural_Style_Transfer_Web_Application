@@ -1,0 +1,15 @@
+.footer{
+    background-color: #333333;
+    position: relative;
+    bottom: 0;
+    height: var(--footer-height);
+    width: 100%;
+    padding: 2rem 2rem;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.copyright{
+    font-size: 1.8rem;
+    color: var(--tertiary-color);
+}

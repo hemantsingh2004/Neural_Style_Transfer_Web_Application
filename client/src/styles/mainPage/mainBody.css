@@ -1,0 +1,10 @@
+.main-body{
+    position: relative;
+    top: var(--navbar-height);
+    margin: 6rem 0rem 12rem 0rem;
+    display: flex;
+    flex-direction: column;
+    gap: 6rem;
+    align-items: center;
+    justify-content: center;
+}
