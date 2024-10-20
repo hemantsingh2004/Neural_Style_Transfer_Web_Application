@@ -57,9 +57,15 @@
 }
 
 .available-images-grid {
+    margin: 3rem 1rem;
     display: flex;
     flex-wrap: wrap;
     gap: 2rem;
+    overflow:scroll;
+}
+
+.available-images-grid::-webkit-scrollbar {
+    display: none;
 }
 
 .available-images-grid img {
