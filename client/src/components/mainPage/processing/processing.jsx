@@ -31,12 +31,12 @@ function Processing() {
     }
     formData.append("intensity", intensity);
     try {
-      const response = await fetch("http://localhost:5000/api/upload", {
+      const response = await fetch("http://localhost:8000/upload", {
         method: "POST",
         body: formData,
       });
       const data = await response.json();
-      console.log(data);
+      console.log(data.message);
 
     } catch (error) {
       console.error("Error uploading images:", error);

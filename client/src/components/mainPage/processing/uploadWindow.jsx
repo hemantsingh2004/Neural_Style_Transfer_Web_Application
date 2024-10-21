@@ -18,7 +18,7 @@ function StyleImageSelection({ onSelectImage, onUploadNew, setVisibility, visibi
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/style-images");
+        const response = await fetch("http://localhost:8000/api/style-images");
         const data = await response.json();
         setAvailableImages(data.images);
       } catch (error) {
