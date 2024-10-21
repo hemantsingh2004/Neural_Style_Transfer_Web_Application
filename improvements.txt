@@ -2,6 +2,8 @@
     1.1 User will be able to use their previously uploaded images again without uploading them again.
     1.2 Can keep track of various of their activities.
 
-2. Since images are upload on the same storage(server), Adding a method to directly access images for uploadWindow instead of fetching them from backend.
+2. Using web-socket to keep the frontend informed about the progress, while using a shared cache like redis to note progress details between express and python.
 
-3. Using web-socket to keep the frontend informed about the progress, while using a shared cache like redis to note progress details between express and python.
+3. Adding nst to the segments and to the videos as well.
+
+4. better configurations for intensity of style image in final image and lbfgs optimizer of nst.

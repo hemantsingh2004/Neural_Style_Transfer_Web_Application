@@ -63,6 +63,7 @@ app.post("/upload", upload.fields([
 ]), async (req, res) => {
   try {
     let styleImagePath = null;
+    let styleImageName = null;
     let styleImageUrl = req.body.styleImageUrl || null;
     const contentImage = req.files['contentImage'] ? req.files['contentImage'][0] : null;
     const intensity = req.body.intensity;
@@ -71,11 +72,13 @@ app.post("/upload", upload.fields([
       // Case 1: styleImageUrl is provided
       const urlParts = styleImageUrl.split('/');
   const filename = urlParts[urlParts.length - 1];
-  styleImagePath = `../images/uploads/pre-avail/${filename}`;
+  styleImagePath = `../images/uploads/pre-avail/`;
+  styleImageName = filename;
     } else if (req.files['styleImage']) {
       // Case 2: styleImage is uploaded
       const styleImage = req.files['styleImage'][0];
-      styleImagePath = `../images/uploads/styleImages/${styleImage.filename}`;  // Create a URL for the uploaded image
+      styleImagePath = `../images/uploads/styleImages`;  // Create a URL for the uploaded image
+      styleImageName = styleImage.filename;
     } else {
       return res.status(400).json({ message: "Style image is required" });
     }
@@ -83,24 +86,28 @@ app.post("/upload", upload.fields([
     if (!contentImage) {
       return res.status(400).json({ message: "Content image is required" });
     }
-    const contentImagePath = `../images/uploads/contentImages/${contentImage.filename}`;  // URL for content image
+    const contentImagePath = `../images/uploads/contentImages/`;  // URL for content image
+    const contentImageName = contentImage.filename;
 
+    const outputFolder = "../images/generated";
     // Return success response with URLs to the uploaded images
-    res.json({
-      message: "Images uploaded successfully",
+    const RequestData = {
       styleImagePath: styleImagePath,
       contentImagePath: contentImagePath,
+      styleImageName: styleImageName,
+      contentImageName: contentImageName,
       intensity: intensity,
+      outputFolder: outputFolder
+    };
+    res.json({
+      message: "Images uploaded successfully",
+      dataReceived: RequestData
     });
-    console.log("Image URLs:", styleImagePath, contentImagePath);
+    console.log(`\n\nRequest Data: ${JSON.stringify(RequestData)}\n\n`);
 
      const pythonApiUrl = 'http://127.0.0.1:5000/style-transfer';
     try {
-      const response = await axios.post(pythonApiUrl, {
-        styleImage: styleImagePath,
-        contentImage: contentImagePath,
-        intensity: intensity,
-      });
+      const response = await axios.post(pythonApiUrl, RequestData);
 
       if (response.data && response.data.finalImageUrl) {
         console.log("Style transfer completed successfully:", response.data.finalImageUrl);
@@ -111,7 +118,7 @@ app.post("/upload", upload.fields([
       }
     } catch (apiError) {
       // console.error("Error calling Python API:", apiError);
-      console.error("Error calling Python API");
+      console.error(`Error calling Python API : ${apiError}`);
     }
 
   } catch (error) {
