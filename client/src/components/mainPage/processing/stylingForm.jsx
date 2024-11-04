@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import ImageUpload from "./imageupload";
 import IntensitySubmit from "./intensitysubmit";
-import "../../../styles/mainPage/processing/processing.css";
+import "../../../styles/mainPage/processing/stylingForm.css";
 
-function Processing() {
+function StylingForm({setGeneratedImage}) {
+  const [processing, setProcessing] = useState(false);
   const [styleImage, setStyleImage] = useState(null);
   const [contentImage, setContentImage] = useState(null);
   const [intensity, setIntensity] = useState(50);
@@ -31,20 +32,35 @@ function Processing() {
     }
     formData.append("intensity", intensity);
     try {
+      setProcessing(true);
       const response = await fetch("http://localhost:8000/upload", {
         method: "POST",
         body: formData,
       });
-      const data = await response.json();
-      console.log(data.message);
-
+      if (response.ok) {
+        const data = await response.json();
+        console.log(`\n\n\n${data.generatedImageURL}\n\n\n`);
+        setGeneratedImage(data.generatedImageURL);
+      } else {
+        const data = await response.json();
+        alert(data.message);
+        console.error("Error uploading images:", response.statusText);
+      }
     } catch (error) {
+      alert("Error: Failed to upload images");
       console.error("Error uploading images:", error);
+    } finally {
+      setProcessing(false);
     }
   };
 
   return (
-    <div className="processing">
+    <div className="style-form">
+      {processing ? (
+        <div id="loading-indicator">
+        <div className="lds-hourglass"></div>
+      </div>
+      ) : (
       <form className="processing-form" onSubmit={handleFormSubmit}>
         <ImageUpload
           setStyleImage={setStyleImage}
@@ -54,8 +70,9 @@ function Processing() {
         />
         <IntensitySubmit onSubmit={handleFormSubmit} setIntensity={setIntensity}/>
       </form>
+      )}
     </div>
   );
 }
 
-export default Processing;
+export default StylingForm;

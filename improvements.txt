@@ -7,3 +7,7 @@
 3. Adding nst to the segments and to the videos as well.
 
 4. better configurations for intensity of style image in final image and lbfgs optimizer of nst.
+
+5. Giving more configurations to user like choosing optimizer, number of iteration to save time, etc.
+
+6. Instead of loading icon, we can have images generated after n number of iterations to show the process.
