@@ -1,10 +1,9 @@
 from models_and_scripts import utils
 import torch
-from torch.optim import Adam, LBFGS
+from torch.optim import Adam
 from torch.autograd import Variable
 import numpy as np
 import os
-
 
 def build_loss(neural_net, optimizing_img, target_representations, content_feature_maps_index, style_feature_maps_indices, config):
     target_content_representation = target_representations[0]
@@ -27,21 +26,15 @@ def build_loss(neural_net, optimizing_img, target_representations, content_featu
 
     return total_loss, content_loss, style_loss, tv_loss
 
-
 def make_tuning_step(neural_net, optimizer, target_representations, content_feature_maps_index, style_feature_maps_indices, config):
-    # Builds function that performs a step in the tuning loop
     def tuning_step(optimizing_img):
         total_loss, content_loss, style_loss, tv_loss = build_loss(neural_net, optimizing_img, target_representations, content_feature_maps_index, style_feature_maps_indices, config)
-        # Computes gradients
         total_loss.backward()
-        # Updates parameters and zeroes gradients
         optimizer.step()
         optimizer.zero_grad()
         return total_loss, content_loss, style_loss, tv_loss
 
-    # Returns the function that will be called inside the tuning loop
     return tuning_step
-
 
 def neural_style_transfer(config):
     content_img_path = os.path.join(config['content_images_dir'], config['content_img_name'])
@@ -84,82 +77,16 @@ def neural_style_transfer(config):
     target_style_representation = [utils.gram_matrix(x) for cnt, x in enumerate(style_img_set_of_feature_maps) if cnt in style_feature_maps_indices_names[0]]
     target_representations = [target_content_representation, target_style_representation]
 
-    # magic numbers in general are a big no no - some things in this code are left like this by design to avoid clutter
-    num_of_iterations = {
-        "lbfgs": 1000,
-        "adam": 3000,
-    }
-
-    #
-    # Start of optimization procedure
-    #
-    if config['optimizer'] == 'adam':
-        optimizer = Adam((optimizing_img,), lr=1e1)
-        tuning_step = make_tuning_step(neural_net, optimizer, target_representations, content_feature_maps_index_name[0], style_feature_maps_indices_names[0], config)
-        for cnt in range(num_of_iterations[config['optimizer']]):
-            total_loss, content_loss, style_loss, tv_loss = tuning_step(optimizing_img)
-            with torch.no_grad():
-                if cnt % 50 == 0:
-                    print(f'Adam | iteration: {cnt:03}, total loss={total_loss.item():12.4f}, content_loss={config["content_weight"] * content_loss.item():12.4f}, style loss={config["style_weight"] * style_loss.item():12.4f}, tv loss={config["tv_weight"] * tv_loss.item():12.4f}')
-                utils.save_img(optimizing_img, dump_path, config, cnt, num_of_iterations[config['optimizer']])
-    elif config['optimizer'] == 'lbfgs':
-        # line_search_fn does not seem to have significant impact on result
-        optimizer = LBFGS((optimizing_img,), max_iter=num_of_iterations['lbfgs'], line_search_fn='strong_wolfe')
-        cnt = 0
-
-        def closure():
-            nonlocal cnt
-            if torch.is_grad_enabled():
-                optimizer.zero_grad()
-            total_loss, content_loss, style_loss, tv_loss = build_loss(neural_net, optimizing_img, target_representations, content_feature_maps_index_name[0], style_feature_maps_indices_names[0], config)
-            if total_loss.requires_grad:
-                total_loss.backward()
-            with torch.no_grad():
-                if cnt % 50 == 0:
-                    print(f'L-BFGS | iteration: {cnt:03}, total loss={total_loss.item():12.4f}, content_loss={config["content_weight"] * content_loss.item():12.4f}, style loss={config["style_weight"] * style_loss.item():12.4f}, tv loss={config["tv_weight"] * tv_loss.item():12.4f}')
-                utils.save_img(optimizing_img, dump_path, config, cnt, num_of_iterations[config['optimizer']])
-
-            cnt += 1
-            return total_loss
-
-        optimizer.step(closure)
+    num_of_iterations = 3000
+    
+    optimizer = Adam((optimizing_img,), lr=1e1)
+    tuning_step = make_tuning_step(neural_net, optimizer, target_representations, content_feature_maps_index_name[0], style_feature_maps_indices_names[0], config)
+    for cnt in range(num_of_iterations):
+        total_loss, content_loss, style_loss, tv_loss = tuning_step(optimizing_img)
+        with torch.no_grad():
+            if cnt % 50 == 0:
+                print(f'Adam | iteration: {cnt:03}, total loss={total_loss.item():12.4f}, content_loss={config["content_weight"] * content_loss.item():12.4f}, style loss={config["style_weight"] * style_loss.item():12.4f}, tv loss={config["tv_weight"] * tv_loss.item():12.4f}')
+                
+            utils.save_img(optimizing_img, dump_path, config, cnt, num_of_iterations)
     
     return image_path
-
-
-if __name__ == "__main__":
-    default_resource_dir = os.path.join(os.path.dirname(__file__))
-    images_dir = os.path.join(default_resource_dir, 'images')
-    output_img_dir = os.path.join(default_resource_dir, 'output-images')
-    img_format = (4, '.jpg')  # saves images in the format: %04d.jpg
-
-    optimization_config = dict()
-    optimization_config['content_images_dir'] = images_dir
-    optimization_config['style_images_dir'] = images_dir
-    optimization_config['output_img_dir'] = output_img_dir
-    optimization_config['img_format'] = img_format
-
-    intentsity = 100
-    style_intensity = 10 ** (6 - ((intentsity - 1)*5/99))
-    optimization_config['content_img_name'] = "hemant.jpg"
-    optimization_config['style_img_name'] = "style2.jpg"
-    optimization_config['height'] = 400  # height of content and style images
-    optimization_config['content_weight'] = 8e2 * style_intensity   # weight factor for content loss
-    optimization_config['style_weight'] = 1e5 # weight factor for style loss
-    optimization_config['tv_weight'] = 1e-1  # weight factor for total variation loss
-    optimization_config['optimizer'] = 'adam'  # 'lbfgs' or 'adam'
-    optimization_config['model'] = 'vgg19'
-    optimization_config['init_method'] = 'content'    # 'random' or 'content' or 'style'
-    optimization_config['saving_freq'] = -1  # -1 means only save the final result (Saving Frequency)
-
-    # original NST (Neural Style Transfer) algorithm (Gatys et al.)
-    results_path = neural_style_transfer(optimization_config)
-
-# best results =>
-    # lbfgs, content init -> (cw, sw, tv) = (1e5, 3e4, 1e0)
-    # lbfgs, style   init -> (cw, sw, tv) = (1e5, 1e1, 1e-1)
-    # lbfgs, random  init -> (cw, sw, tv) = (1e5, 1e3, 1e0)
-
-    # adam, content init -> (cw, sw, tv, lr) = (1e5, 1e5, 1e-1, 1e1)
-    # adam, style   init -> (cw, sw, tv, lr) = (1e5, 1e2, 1e-1, 1e1)
-    # adam, random  init -> (cw, sw, tv, lr) = (1e5, 1e2, 1e-1, 1e1)
