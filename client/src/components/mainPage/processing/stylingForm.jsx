@@ -39,7 +39,6 @@ function StylingForm({setGeneratedImage}) {
       });
       if (response.ok) {
         const data = await response.json();
-        console.log(`\n\n\n${data.generatedImageURL}\n\n\n`);
         setGeneratedImage(data.generatedImageURL);
       } else {
         const data = await response.json();

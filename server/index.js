@@ -160,6 +160,21 @@ app.get("/api/style-images", (req, res) => {
   });
 });
 
+app.get('/download-image/*', (req, res) => {
+  const imagePath = req.params[0];
+  const filePath = path.join(__dirname, '../images/generated', imagePath);
+  fs.access(filePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      return res.status(404).send('File not found');
+    }
+    res.download(filePath, (err) => {
+      if (err) {
+        return res.status(500).send('Could not download the file');
+      }
+    });
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });

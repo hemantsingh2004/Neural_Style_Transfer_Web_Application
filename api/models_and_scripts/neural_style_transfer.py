@@ -68,7 +68,7 @@ def neural_style_transfer(config):
     optimizing_img = Variable(init_img, requires_grad=True)
 
     neural_net, content_feature_maps_index_name, style_feature_maps_indices_names = utils.prepare_model(config['model'], device)
-    print(f'Using {config["model"]} in the optimization procedure.')
+    # print(f'Using {config["model"]} in the optimization procedure.')
 
     content_img_set_of_feature_maps = neural_net(content_img)
     style_img_set_of_feature_maps = neural_net(style_img)
@@ -77,15 +77,15 @@ def neural_style_transfer(config):
     target_style_representation = [utils.gram_matrix(x) for cnt, x in enumerate(style_img_set_of_feature_maps) if cnt in style_feature_maps_indices_names[0]]
     target_representations = [target_content_representation, target_style_representation]
 
-    num_of_iterations = 3000
+    num_of_iterations = 300
     
     optimizer = Adam((optimizing_img,), lr=1e1)
     tuning_step = make_tuning_step(neural_net, optimizer, target_representations, content_feature_maps_index_name[0], style_feature_maps_indices_names[0], config)
     for cnt in range(num_of_iterations):
         total_loss, content_loss, style_loss, tv_loss = tuning_step(optimizing_img)
         with torch.no_grad():
-            if cnt % 50 == 0:
-                print(f'Adam | iteration: {cnt:03}, total loss={total_loss.item():12.4f}, content_loss={config["content_weight"] * content_loss.item():12.4f}, style loss={config["style_weight"] * style_loss.item():12.4f}, tv loss={config["tv_weight"] * tv_loss.item():12.4f}')
+            # if cnt % 50 == 0:
+                # print(f'Adam | iteration: {cnt:03}, total loss={total_loss.item():12.4f}, content_loss={config["content_weight"] * content_loss.item():12.4f}, style loss={config["style_weight"] * style_loss.item():12.4f}, tv loss={config["tv_weight"] * tv_loss.item():12.4f}')
                 
             utils.save_img(optimizing_img, dump_path, config, cnt, num_of_iterations)
     
