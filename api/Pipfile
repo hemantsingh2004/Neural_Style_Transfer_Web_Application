@@ -5,9 +5,11 @@ name = "pypi"
 
 [packages]
 flask = "*"
-torch = "*"
-torchvision = "*"
 flask-cors = "*"
+torch = {version = "*", index = "https://download.pytorch.org/whl/cu124"}
+torchvision = "*"
+torchaudio = "*"
+opencv-python = "*"
 
 [dev-packages]
 
