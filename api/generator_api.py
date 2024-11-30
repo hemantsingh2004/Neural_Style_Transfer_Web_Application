@@ -36,7 +36,6 @@ def style_transfer():
     optimization_config['content_weight'] = 8e2 * style_intensity   # weight factor for content loss
     optimization_config['style_weight'] = 1e5 # weight factor for style loss
     optimization_config['tv_weight'] = 1e-1  # weight factor for total variation loss
-    optimization_config['optimizer'] = 'adam'  # 'lbfgs' or 'adam'
     optimization_config['model'] = 'vgg19'
     optimization_config['init_method'] = 'content'    # 'random' or 'content' or 'style'
     optimization_config['saving_freq'] = -1  # -1 means only save the final result (Saving Frequency)
