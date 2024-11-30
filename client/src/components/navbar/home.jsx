@@ -3,7 +3,7 @@ import React from "react";
 function HomeLink(){
     return(
         <div className="home-link">
-            <a href="">Home</a>
+            <a href="" onClick={e => e.preventDefault()}>Home</a>
         </div>
     );
 }

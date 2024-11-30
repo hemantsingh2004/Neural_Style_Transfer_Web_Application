@@ -27,7 +27,6 @@ def style_transfer():
     optimization_config['content_images_dir'] = os.path.join(default_resource_dir, content_image_path)
     optimization_config['style_images_dir'] =  os.path.join(default_resource_dir, style_image_path)
     optimization_config['output_img_dir'] = os.path.join(default_resource_dir, output_path)
-    print(f"\ndefault_resource_dir: {default_resource_dir}\noutput_img_dir: {optimization_config['output_img_dir']}\n")
     optimization_config['img_format'] = (4, '.jpg')  # saves images in the format: %04d.jpg
     optimization_config['content_img_name'] = content_image_name
     optimization_config['style_img_name'] = style_image_name
@@ -42,7 +41,6 @@ def style_transfer():
 
     # original NST (Neural Style Transfer) algorithm (Gatys et al.)
     results_path = neural_style_transfer(optimization_config)
-    print(f"\n\n\nresults_path: {results_path}\n\n\n")
     return jsonify({'finalImageUrl': results_path})
 
 if __name__ == '__main__':

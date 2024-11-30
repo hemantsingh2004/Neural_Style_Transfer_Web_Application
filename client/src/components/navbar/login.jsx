@@ -3,7 +3,7 @@ import React from "react";
 function LoginLink(){
     return(
         <div className="login-link">
-            <a href="">Login</a>
+            <a href="" onClick={e => e.preventDefault()}>Login</a>
         </div>
     );
 }
