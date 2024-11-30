@@ -7,7 +7,7 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 import cron from "node-cron";
 import axios from "axios";
-import deleteOldFiles from "./deleteOldFiles.js";
+import deleteOldFilesAndFolders from "./deleteOldFiles.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -58,10 +58,16 @@ cron.schedule("0 * * * *", () => {
     "../images/uploads/styleImages"
   );
 
+  const generatedImagesFolder = path.join(
+    __dirname,
+    "../images/generated"
+  );
+
   console.log("Running scheduled task: Deleting files older than 1 hour...");
 
-  deleteOldFiles(contentImagesFolder);
-  deleteOldFiles(styleImagesFolder);
+  deleteOldFilesAndFolders(contentImagesFolder);
+  deleteOldFilesAndFolders(styleImagesFolder);
+  deleteOldFilesAndFolders(generatedImagesFolder);
 });
 
 // API to handle image and data upload
