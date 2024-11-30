@@ -47,9 +47,12 @@ def neural_style_transfer(config):
     content_img_path = os.path.join(config['content_images_dir'], config['content_img_name'])
     style_img_path = os.path.join(config['style_images_dir'], config['style_img_name'])
 
-    out_dir_name = 'combined_' + os.path.split(content_img_path)[1].split('.')[0] + '_' + os.path.split(style_img_path)[1].split('.')[0]
+    img_format = config['img_format']
+    output_img_name = "2999".zfill(img_format[0]) + img_format[1] if config['saving_freq'] != -1 else utils.generate_out_img_name(config)
+    out_dir_name = "generated_" + os.path.split(content_img_path)[1].split('.')[0] + '_' + os.path.split(style_img_path)[1].split('.')[0]
     dump_path = os.path.join(config['output_img_dir'], out_dir_name)
     os.makedirs(dump_path, exist_ok=True)
+    image_path = os.path.join(dump_path, output_img_name)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -114,14 +117,14 @@ def neural_style_transfer(config):
             with torch.no_grad():
                 if cnt % 50 == 0:
                     print(f'L-BFGS | iteration: {cnt:03}, total loss={total_loss.item():12.4f}, content_loss={config["content_weight"] * content_loss.item():12.4f}, style loss={config["style_weight"] * style_loss.item():12.4f}, tv loss={config["tv_weight"] * tv_loss.item():12.4f}')
-            utils.save_img(optimizing_img, dump_path, config, cnt, num_of_iterations[config['optimizer']])
+                utils.save_img(optimizing_img, dump_path, config, cnt, num_of_iterations[config['optimizer']])
 
             cnt += 1
             return total_loss
 
         optimizer.step(closure)
-
-    return dump_path
+    
+    return image_path
 
 
 if __name__ == "__main__":
