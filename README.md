@@ -55,7 +55,7 @@ Or more visually:
 ## 🛠️ Tech Stack
 
 ### Frontend:
-- **React.js** + **Material UI**
+- **React.js**
 - Upload UI + intensity slider
 - Image preview + download option
 
@@ -84,7 +84,7 @@ Or more visually:
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/singhemant2004/Neural_Style_Transfer_Web_Application
+git clone https://github.com/hemantsinghdev/Neural_Style_Transfer_Web_Application
 cd nst-web-app
 ````
 
@@ -122,7 +122,7 @@ npm start
 ---
 
 ## 📁 Project Structure
-
+```
 NST-WEB-APP/
 ├── client/           # React frontend
 ├── server/           # Express backend
@@ -134,7 +134,7 @@ NST-WEB-APP/
 │   └── generated/    # Stylized images
 ├── Project
 └── README.md
-
+```
 ---
 
 ## 🔍 Key Features
@@ -171,5 +171,5 @@ I eventually **moved on** from this project after completing MVP, realizing I’
 
 ---
 
-> Created by [Hemant Singh](https://github.com/hemantsingh2004)
+> Created by [Hemant Singh](https://github.com/hemantsinghdev)
 > Special thanks to [Aleksa Gordić](https://github.com/gordicaleksa) for the original NST implementation that made this possible.
